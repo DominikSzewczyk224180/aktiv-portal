@@ -24,7 +24,7 @@ img { display: block; max-width: 100%; }
   z-index: 1100;
 }
 .brand { display: flex; align-items: center; gap: 11px; }
-.brand-mark { display: block; }
+.brand-mark { display: block; height: 36px; width: auto; }
 .brand-name {
   font-family: "Space Grotesk", sans-serif;
   font-size: 25px;
