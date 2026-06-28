@@ -1,5 +1,5 @@
 const CATS = {
-  stajnia:    { label: "Stajnie",         color: "#1F3D2B" },
+  stajnia:    { label: "Stajnie",         color: "#173B2A" },
   pensjonat:  { label: "Pensjonaty",      color: "#8A6A3B" },
   weterynarz: { label: "Weterynarze",     color: "#B5562E" },
   fizjo:      { label: "Fizjoterapeuci",  color: "#4A5A6A" },
@@ -8,7 +8,7 @@ const CATS = {
 };
 
 const PLACES = [
-  { id: 1,  cat: "stajnia",    name: "Stajnia Pod Dębami",            place: "Konstancin-Jeziorna", lat: 52.0894, lng: 21.1186, rating: 4.8, reviews: 126, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 712 04 18", address: "ul. Wierzbowa 4, Konstancin-Jeziorna", services: ["Pensjonat", "Lekcje jazdy", "Lonżowanie"], blurb: "Kameralna stajnia z krytą ujeżdżalnią i dostępem do leśnych tras.", image: "" },
+  { id: 1,  cat: "stajnia",    name: "Stajnia Pod Dębami",            place: "Konstancin-Jeziorna", lat: 52.0894, lng: 21.1186, rating: 4.8, reviews: 126, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 712 04 18", address: "ul. Wierzbowa 4, Konstancin-Jeziorna", services: ["Pensjonat", "Lekcje jazdy", "Lonżowanie"], blurb: "Kameralna stajnia z krytą ujeżdżalnią i dostępem do leśnych tras.", image: "images/stajnia-pod-debami.png", profileUrl: "stajnia.html" },
   { id: 2,  cat: "stajnia",    name: "Ośrodek Jeździecki Lewada",     place: "Nadarzyn",            lat: 52.0840, lng: 20.8030, rating: 4.6, reviews: 89,  hours: "Pn-Nd, 7:00-21:00", phone: "+48 22 739 11 50", address: "ul. Polna 22, Nadarzyn", services: ["Skoki", "Ujeżdżenie", "Hipoterapia"], blurb: "Sportowy ośrodek z parkurem i lonżownikiem, lekcje na każdym poziomie.", image: "" },
   { id: 3,  cat: "stajnia",    name: "Stajnia Biała Grzywa",          place: "Piaseczno",           lat: 52.0700, lng: 21.0240, rating: 4.9, reviews: 203, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 756 33 02", address: "ul. Sportowa 9, Piaseczno", services: ["Lekcje", "Obozy", "Pensjonat"], blurb: "Rodzinna stajnia z obozami jeździeckimi i nauką od podstaw.", image: "" },
   { id: 4,  cat: "stajnia",    name: "Ranczo Mazovia",                place: "Grodzisk Mazowiecki", lat: 52.1100, lng: 20.6300, rating: 4.5, reviews: 54,  hours: "Wt-Nd, 9:00-19:00", phone: "+48 22 724 88 41", address: "ul. Leśna 3, Grodzisk Mazowiecki", services: ["Rajdy konne", "Jazdy w terenie"], blurb: "Rajdy konne i jazdy w terenie po malowniczych okolicach.", image: "" },
@@ -52,10 +52,7 @@ const state = { cat: "all", q: "", place: "" };
 
 const map = L.map("map", { scrollWheelZoom: true, zoomControl: false }).setView([52.18, 20.98], 10);
 L.control.zoom({ position: "topright" }).addTo(map);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: "© OpenStreetMap"
-}).addTo(map);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap" }).addTo(map);
 
 const markersLayer = L.layerGroup().addTo(map);
 let markerById = {};
@@ -91,13 +88,7 @@ function renderMarkers(list) {
   markersLayer.clearLayers();
   markerById = {};
   list.forEach(function (p) {
-    const icon = L.divIcon({
-      className: "pin-wrap",
-      html: pinHtml(CATS[p.cat].color),
-      iconSize: [30, 40],
-      iconAnchor: [15, 40],
-      popupAnchor: [0, -36]
-    });
+    const icon = L.divIcon({ className: "pin-wrap", html: pinHtml(CATS[p.cat].color), iconSize: [30, 40], iconAnchor: [15, 40], popupAnchor: [0, -36] });
     const m = L.marker([p.lat, p.lng], { icon: icon }).addTo(markersLayer);
     m.on("click", function () { openDetail(p, false); });
     markerById[p.id] = m;
@@ -131,6 +122,16 @@ function renderResults(list) {
   });
 }
 
+function actionsHtml(p) {
+  const tel = '<a class="btn btn-green" href="tel:' + p.phone.replace(/\s/g, "") + '">Zadzwoń</a>';
+  const onmap = '<button class="btn btn-ghost" type="button" id="show-on-map">Pokaż na mapie</button>';
+  if (p.profileUrl) {
+    return '<a class="btn btn-solid" href="' + p.profileUrl + '">Zobacz profil stajni</a>' +
+           '<div class="row">' + tel + onmap + '</div>';
+  }
+  return '<div class="row">' + tel + onmap + '</div>';
+}
+
 function openDetail(p, fly) {
   const c = document.getElementById("detail-content");
   c.innerHTML =
@@ -145,12 +146,11 @@ function openDetail(p, fly) {
       '</div>' +
       '<div class="services">' + p.services.map(function (s) { return '<span class="tag">' + s + '</span>'; }).join("") + '</div>' +
       '<p class="blurb">' + p.blurb + '</p>' +
-      '<div class="detail-actions">' +
-        '<a class="btn btn-solid" href="tel:' + p.phone.replace(/\s/g, "") + '">Zadzwoń</a>' +
-        '<button class="btn btn-ghost" type="button" id="show-on-map">Pokaż na mapie</button>' +
-      '</div>' +
+      '<div class="detail-actions">' + actionsHtml(p) + '</div>' +
     '</div>';
 
+  const panel = document.getElementById("panel");
+  panel.classList.add("detail-open");
   document.getElementById("detail").classList.add("open");
   document.getElementById("detail").setAttribute("aria-hidden", "false");
   setActiveMarker(p.id);
@@ -161,13 +161,12 @@ function openDetail(p, fly) {
 
   const btn = document.getElementById("show-on-map");
   if (btn) {
-    btn.addEventListener("click", function () {
-      map.flyTo([p.lat, p.lng], Math.max(map.getZoom(), 14), { duration: 0.6 });
-    });
+    btn.addEventListener("click", function () { map.flyTo([p.lat, p.lng], Math.max(map.getZoom(), 14), { duration: 0.6 }); });
   }
 }
 
 function closeDetail() {
+  document.getElementById("panel").classList.remove("detail-open");
   document.getElementById("detail").classList.remove("open");
   document.getElementById("detail").setAttribute("aria-hidden", "true");
   setActiveMarker(null);

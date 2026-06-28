@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aktiv, jeździecka mapa Polski</title>
   <meta name="description" content="Aktiv. Cała jeździecka Polska na jednej mapie. Stajnie, weterynarze, fizjoterapeuci, dietetycy i sklepy z paszą.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 38'><path d='M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z' fill='%231F3D2B'/><path d='M8 23 C8 12 14 9 14 9 C14 9 20 12 20 23' fill='none' stroke='%23C8A06B' stroke-width='3' stroke-linecap='round'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 38'><path d='M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z' fill='%23173B2A'/><path d='M8 23 C8 12 14 9 14 9 C14 9 20 12 20 23' fill='none' stroke='%23E2571E' stroke-width='3' stroke-linecap='round'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="Aktiv, strona główna">
+    <a class="brand" href="index.html" aria-label="Aktiv, strona główna">
       <svg class="brand-mark" width="30" height="40" viewBox="0 0 28 38" aria-hidden="true">
-        <path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="#1F3D2B"></path>
-        <path d="M8 23 C8 12 14 9 14 9 C14 9 20 12 20 23" fill="none" stroke="#C8A06B" stroke-width="3.4" stroke-linecap="round"></path>
-        <circle cx="9.6" cy="19" r="0.95" fill="#1F3D2B"></circle>
-        <circle cx="11.6" cy="13.4" r="0.95" fill="#1F3D2B"></circle>
-        <circle cx="16.4" cy="13.4" r="0.95" fill="#1F3D2B"></circle>
-        <circle cx="18.4" cy="19" r="0.95" fill="#1F3D2B"></circle>
+        <path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="#173B2A"></path>
+        <path d="M8 23 C8 12 14 9 14 9 C14 9 20 12 20 23" fill="none" stroke="#E2571E" stroke-width="3.4" stroke-linecap="round"></path>
+        <circle cx="9.6" cy="19" r="0.95" fill="#173B2A"></circle>
+        <circle cx="11.6" cy="13.4" r="0.95" fill="#173B2A"></circle>
+        <circle cx="16.4" cy="13.4" r="0.95" fill="#173B2A"></circle>
+        <circle cx="18.4" cy="19" r="0.95" fill="#173B2A"></circle>
       </svg>
       <span class="brand-name"><b>Aktiv</b><span>portal</span></span>
     </a>
@@ -33,10 +33,10 @@
   </header>
 
   <main class="layout">
-    <aside class="panel" aria-label="Wyszukiwarka i wyniki">
+    <aside id="panel" class="panel" aria-label="Wyszukiwarka i wyniki">
       <div class="panel-head">
         <p class="eyebrow">Jeździecka mapa Polski</p>
-        <h1 class="lead">Znajdź wszystko, czego potrzebuje Twój koń.</h1>
+        <h1 class="lead">Znajdź wszystko, czego potrzebuje <span class="hl">Twój koń.</span></h1>
         <div class="search">
           <input id="q" class="search-input" type="text" placeholder="Stajnia, weterynarz, pasza..." aria-label="Czego szukasz">
           <input id="place" class="search-input" type="text" placeholder="Miejscowość" aria-label="Gdzie">
