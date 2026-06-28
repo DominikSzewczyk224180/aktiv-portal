@@ -8,14 +8,14 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 38'><path d='M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z' fill='%23173B2A'/><path d='M8 23 C8 12 14 9 14 9 C14 9 20 12 20 23' fill='none' stroke='%23E2571E' stroke-width='3' stroke-linecap='round'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-theme="t1">
   <header class="topbar">
     <a class="brand" href="index.html" aria-label="Aktiv, strona główna">
-      <svg class="brand-mark" width="30" height="40" viewBox="0 0 28 38" aria-hidden="true">
+      <svg class="brand-mark logo-t1" width="30" height="40" viewBox="0 0 28 38" aria-hidden="true">
         <path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="#173B2A"></path>
         <path d="M8 23 C8 12 14 9 14 9 C14 9 20 12 20 23" fill="none" stroke="#E2571E" stroke-width="3.4" stroke-linecap="round"></path>
         <circle cx="9.6" cy="19" r="0.95" fill="#173B2A"></circle>
@@ -23,8 +23,26 @@
         <circle cx="16.4" cy="13.4" r="0.95" fill="#173B2A"></circle>
         <circle cx="18.4" cy="19" r="0.95" fill="#173B2A"></circle>
       </svg>
+      <svg class="brand-mark logo-t2" width="30" height="40" viewBox="0 0 28 38" aria-hidden="true">
+        <path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="#15C463"></path>
+        <path d="M14 21 L14 10" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"></path>
+        <path d="M9.8 13.5 L14 9 L18.2 13.5" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <svg class="brand-mark logo-t3" width="30" height="40" viewBox="0 0 28 38" aria-hidden="true">
+        <path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="#15294A"></path>
+        <path d="M8.5 19 C8.5 11 19.5 11 19.5 19" fill="none" stroke="#C9A24A" stroke-width="2.3" stroke-linecap="round"></path>
+        <path d="M8.5 11 C8.5 19 19.5 19 19.5 11" fill="none" stroke="#C9A24A" stroke-width="2.3" stroke-linecap="round"></path>
+        <circle cx="14" cy="15" r="1.1" fill="#C9A24A"></circle>
+      </svg>
       <span class="brand-name"><b>Aktiv</b><span>portal</span></span>
     </a>
+
+    <div class="theme-switch" role="tablist" aria-label="Styl demo">
+      <button class="seg" type="button" data-theme-btn="t1"><b>1</b><span class="name">Natura</span></button>
+      <button class="seg" type="button" data-theme-btn="t2"><b>2</b><span class="name">Active</span></button>
+      <button class="seg" type="button" data-theme-btn="t3"><b>3</b><span class="name">Premium</span></button>
+    </div>
+
     <div class="topbar-actions">
       <span class="demo-pill">wersja demo</span>
       <a class="btn btn-ghost" href="#">Dla firm</a>
@@ -62,5 +80,6 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="script.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>

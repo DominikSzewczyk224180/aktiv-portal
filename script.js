@@ -1,11 +1,20 @@
 const CATS = {
-  stajnia:    { label: "Stajnie",         color: "#173B2A" },
-  pensjonat:  { label: "Pensjonaty",      color: "#8A6A3B" },
-  weterynarz: { label: "Weterynarze",     color: "#B5562E" },
-  fizjo:      { label: "Fizjoterapeuci",  color: "#4A5A6A" },
-  dietetyk:   { label: "Dietetycy",       color: "#6B7B3A" },
-  sklep:      { label: "Sklepy z paszą",  color: "#6E4A5A" }
+  stajnia:    { label: "Stajnie" },
+  pensjonat:  { label: "Pensjonaty" },
+  weterynarz: { label: "Weterynarze" },
+  fizjo:      { label: "Fizjoterapeuci" },
+  dietetyk:   { label: "Dietetycy" },
+  sklep:      { label: "Sklepy z paszą" }
 };
+
+const PALETTES = {
+  t1: { stajnia: "#173B2A", pensjonat: "#8A6A3B", weterynarz: "#B5562E", fizjo: "#4A5A6A", dietetyk: "#6B7B3A", sklep: "#6E4A5A" },
+  t2: { stajnia: "#16A34A", pensjonat: "#0D9488", weterynarz: "#0EA5E9", fizjo: "#6366F1", dietetyk: "#84CC16", sklep: "#F59E0B" },
+  t3: { stajnia: "#15294A", pensjonat: "#3E5C82", weterynarz: "#2F6FB0", fizjo: "#5B6B82", dietetyk: "#4A7C6F", sklep: "#8C6B4A" }
+};
+
+let palette = PALETTES.t1;
+function catColor(cat) { return palette[cat]; }
 
 const PLACES = [
   { id: 1,  cat: "stajnia",    name: "Stajnia Pod Dębami",            place: "Konstancin-Jeziorna", lat: 52.0894, lng: 21.1186, rating: 4.8, reviews: 126, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 712 04 18", address: "ul. Wierzbowa 4, Konstancin-Jeziorna", services: ["Pensjonat", "Lekcje jazdy", "Lonżowanie"], blurb: "Kameralna stajnia z krytą ujeżdżalnią i dostępem do leśnych tras.", image: "images/stajnia-pod-debami.png", profileUrl: "stajnia.html" },
@@ -43,7 +52,7 @@ function mediaHtml(p, big) {
   const cat = CATS[p.cat];
   const hasPhoto = p.image && p.image.length > 0;
   const cls = "media" + (big ? " detail-media" : "") + (hasPhoto ? " has-photo" : "");
-  let style = "background-color:" + cat.color + ";";
+  let style = "background-color:" + catColor(p.cat) + ";";
   if (hasPhoto) { style += "background-image:url('" + p.image + "');"; }
   return '<div class="' + cls + '" style="' + style + '"><span class="cat-badge">' + cat.label + '</span>' + HORSESHOE + '</div>';
 }
@@ -88,7 +97,7 @@ function renderMarkers(list) {
   markersLayer.clearLayers();
   markerById = {};
   list.forEach(function (p) {
-    const icon = L.divIcon({ className: "pin-wrap", html: pinHtml(CATS[p.cat].color), iconSize: [30, 40], iconAnchor: [15, 40], popupAnchor: [0, -36] });
+    const icon = L.divIcon({ className: "pin-wrap", html: pinHtml(catColor(p.cat)), iconSize: [30, 40], iconAnchor: [15, 40], popupAnchor: [0, -36] });
     const m = L.marker([p.lat, p.lng], { icon: icon }).addTo(markersLayer);
     m.on("click", function () { openDetail(p, false); });
     markerById[p.id] = m;
@@ -203,6 +212,11 @@ function fitToAll() {
 document.getElementById("q").addEventListener("input", function (e) { state.q = e.target.value; refresh(); });
 document.getElementById("place").addEventListener("input", function (e) { state.place = e.target.value; refresh(); });
 document.getElementById("detail-back").addEventListener("click", closeDetail);
+document.addEventListener("themechange", function (e) {
+  palette = PALETTES[e.detail.theme] || PALETTES.t1;
+  closeDetail();
+  refresh();
+});
 window.addEventListener("resize", function () { map.invalidateSize(); });
 
 renderChips();
