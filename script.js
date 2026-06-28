@@ -7,14 +7,15 @@ const CATS = {
   sklep:      { label: "Sklepy z paszą" }
 };
 
-const PALETTES = {
-  t1: { stajnia: "#173B2A", pensjonat: "#8A6A3B", weterynarz: "#B5562E", fizjo: "#4A5A6A", dietetyk: "#6B7B3A", sklep: "#6E4A5A" },
-  t2: { stajnia: "#16A34A", pensjonat: "#0D9488", weterynarz: "#0EA5E9", fizjo: "#6366F1", dietetyk: "#84CC16", sklep: "#F59E0B" },
-  t3: { stajnia: "#15294A", pensjonat: "#3E5C82", weterynarz: "#2F6FB0", fizjo: "#5B6B82", dietetyk: "#4A7C6F", sklep: "#8C6B4A" }
+const COLORS = {
+  stajnia: "#22C55E",
+  pensjonat: "#0EA5A4",
+  weterynarz: "#2F6FED",
+  fizjo: "#7C5CF0",
+  dietetyk: "#6FA80E",
+  sklep: "#EF8A00"
 };
-
-let palette = PALETTES.t1;
-function catColor(cat) { return palette[cat]; }
+function catColor(cat) { return COLORS[cat]; }
 
 const PLACES = [
   { id: 1,  cat: "stajnia",    name: "Stajnia Pod Dębami",            place: "Konstancin-Jeziorna", lat: 52.0894, lng: 21.1186, rating: 4.8, reviews: 126, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 712 04 18", address: "ul. Wierzbowa 4, Konstancin-Jeziorna", services: ["Pensjonat", "Lekcje jazdy", "Lonżowanie"], blurb: "Kameralna stajnia z krytą ujeżdżalnią i dostępem do leśnych tras.", image: "images/stajnia-pod-debami.png", profileUrl: "stajnia.html" },
@@ -35,10 +36,12 @@ const PLACES = [
   { id: 16, cat: "sklep",      name: "Sklep Jeździecki Galop",        place: "Pruszków",            lat: 52.1660, lng: 20.8000, rating: 4.5, reviews: 77,  hours: "Pn-Sb, 10:00-18:00", phone: "+48 22 758 22 14", address: "ul. Plantowa 5, Pruszków", services: ["Sprzęt", "Odzież", "Pasze"], blurb: "Sprzęt, odzież i pasze w jednym miejscu.", image: "" }
 ];
 
-const HORSESHOE = '<svg class="horseshoe" width="56" height="56" viewBox="0 0 28 38" aria-hidden="true"><path d="M8 28 C8 13 14 9 14 9 C14 9 20 13 20 28" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"></path><circle cx="9.4" cy="24" r="1" fill="#FFFFFF"></circle><circle cx="11.4" cy="16" r="1" fill="#FFFFFF"></circle><circle cx="16.6" cy="16" r="1" fill="#FFFFFF"></circle><circle cx="18.6" cy="24" r="1" fill="#FFFFFF"></circle></svg>';
+const MEDIA_MARK = '<svg class="mark" width="46" height="58" viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29 C12 29 21 18 21 10 A9 9 0 1 0 3 10 C3 18 12 29 12 29 Z" fill="none" stroke="#FFFFFF" stroke-width="2"></path><circle cx="12" cy="10" r="3" fill="none" stroke="#FFFFFF" stroke-width="2"></circle></svg>';
+
+const CHEVRON = '<svg class="chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6 L15 12 L9 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
 
 function pinHtml(color) {
-  return '<svg width="30" height="40" viewBox="0 0 28 38" aria-hidden="true"><path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="' + color + '"></path><circle cx="14" cy="14" r="5" fill="#FAF7F1"></circle></svg>';
+  return '<svg width="30" height="40" viewBox="0 0 28 38" aria-hidden="true"><path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="' + color + '" stroke="#FFFFFF" stroke-width="1.4"></path><circle cx="14" cy="14" r="4.6" fill="#FFFFFF"></circle></svg>';
 }
 
 function stars(rating) {
@@ -49,15 +52,12 @@ function stars(rating) {
 }
 
 function mediaHtml(p, big) {
-  const cat = CATS[p.cat];
   const hasPhoto = p.image && p.image.length > 0;
   const cls = "media" + (big ? " detail-media" : "") + (hasPhoto ? " has-photo" : "");
   let style = "background-color:" + catColor(p.cat) + ";";
   if (hasPhoto) { style += "background-image:url('" + p.image + "');"; }
-  return '<div class="' + cls + '" style="' + style + '"><span class="cat-badge">' + cat.label + '</span>' + HORSESHOE + '</div>';
+  return '<div class="' + cls + '" style="' + style + '"><span class="cat-badge">' + CATS[p.cat].label + '</span>' + MEDIA_MARK + '</div>';
 }
-
-const state = { cat: "all", q: "", place: "" };
 
 const map = L.map("map", { scrollWheelZoom: true, zoomControl: false }).setView([52.18, 20.98], 10);
 L.control.zoom({ position: "topright" }).addTo(map);
@@ -66,6 +66,7 @@ L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.p
 const markersLayer = L.layerGroup().addTo(map);
 let markerById = {};
 let activeId = null;
+const state = { cat: "all", q: "", place: "" };
 
 function applyFilters() {
   const q = state.q.trim().toLowerCase();
@@ -118,7 +119,10 @@ function renderResults(list) {
       '<div class="card-body">' +
         '<h3 class="card-title">' + p.name + '</h3>' +
         '<p class="card-place">' + p.place + '</p>' +
-        '<div class="rating"><span class="stars">' + stars(p.rating) + '</span><b>' + p.rating.toFixed(1) + '</b><span>(' + p.reviews + ')</span></div>' +
+        '<div class="card-foot">' +
+          '<div class="rating"><span class="stars">' + stars(p.rating) + '</span><b>' + p.rating.toFixed(1) + '</b><span>(' + p.reviews + ')</span></div>' +
+          CHEVRON +
+        '</div>' +
       '</div>' +
     '</article>';
   }).join("");
@@ -158,8 +162,7 @@ function openDetail(p, fly) {
       '<div class="detail-actions">' + actionsHtml(p) + '</div>' +
     '</div>';
 
-  const panel = document.getElementById("panel");
-  panel.classList.add("detail-open");
+  document.getElementById("panel").classList.add("detail-open");
   document.getElementById("detail").classList.add("open");
   document.getElementById("detail").setAttribute("aria-hidden", "false");
   setActiveMarker(p.id);
@@ -183,9 +186,9 @@ function closeDetail() {
 
 function renderChips() {
   const wrap = document.getElementById("chips");
-  let html = '<button class="chip active" data-cat="all">Wszystko</button>';
+  let html = '<button class="chip active" data-cat="all"><span class="dot" style="background:#0F1A14"></span>Wszystko</button>';
   Object.keys(CATS).forEach(function (key) {
-    html += '<button class="chip" data-cat="' + key + '">' + CATS[key].label + '</button>';
+    html += '<button class="chip" data-cat="' + key + '"><span class="dot" style="background:' + COLORS[key] + '"></span>' + CATS[key].label + '</button>';
   });
   wrap.innerHTML = html;
   Array.prototype.forEach.call(wrap.querySelectorAll(".chip"), function (el) {
@@ -212,11 +215,6 @@ function fitToAll() {
 document.getElementById("q").addEventListener("input", function (e) { state.q = e.target.value; refresh(); });
 document.getElementById("place").addEventListener("input", function (e) { state.place = e.target.value; refresh(); });
 document.getElementById("detail-back").addEventListener("click", closeDetail);
-document.addEventListener("themechange", function (e) {
-  palette = PALETTES[e.detail.theme] || PALETTES.t1;
-  closeDetail();
-  refresh();
-});
 window.addEventListener("resize", function () { map.invalidateSize(); });
 
 renderChips();

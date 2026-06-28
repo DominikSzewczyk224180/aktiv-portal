@@ -17,7 +17,7 @@ if (submitBtn) {
 
     [name, phone].forEach(function (input) {
       if (!input.value.trim()) {
-        input.style.borderColor = "#E2571E";
+        input.style.borderColor = "#E5484D";
         ok = false;
       } else {
         input.style.borderColor = "";

@@ -2,19 +2,13 @@
 
 Klikalny prototyp jeździeckiej mapy Polski. Statyczny (HTML, CSS, JS), bez backendu, dane zmyślone na sztywno. Mapa Leaflet plus CARTO Voyager, bez kluczy.
 
-## Przełącznik stylów
-U góry jest przełącznik 1 2 3, który zmienia cały wygląd portalu na żywo:
-1 Natura, zieleń plus pomarańcz, logo z podkową.
-2 Active, żywa zieleń, logo pin ze strzałką, font Space Grotesk.
-3 Premium, granat plus złoto, logo pin z przeplotem, font Manrope.
-Służy do pokazania klientowi trzech kierunków i wyboru jednego.
+Jeden, dopracowany styl Active: żywa zieleń, ciemny grafit, logo pin ze strzałką, font Space Grotesk.
 
 ## Pliki
 index.html, strona z mapą i wyszukiwarką.
 stajnia.html, przykładowa osobna strona stajni z zapisem na trening.
-styles.css, wspólne style i trzy motywy.
-script.js, logika mapy i listy, palety pinów per motyw.
-theme.js, obsługa przełącznika stylów.
+styles.css, wszystkie style.
+script.js, logika mapy i listy.
 stajnia.js, obsługa formularza zapisu.
 images/, zdjęcia.
 
@@ -26,10 +20,10 @@ Otwórz index.html w przeglądarce.
 2. Settings, Pages, Source: Deploy from a branch, branch main, folder root.
 
 ## Zdjęcia
-W script.js, w tablicy PLACES, pole image. Puste pokazuje kafelek z podkową. Wklej link (Unsplash, Pexels), a karta i panel go użyją.
+W script.js, w tablicy PLACES, pole image. Puste pokazuje kafelek z ikoną pinezki. Wklej link (Unsplash, Pexels), a karta i panel go użyją.
 Przykładowa stajnia używa images/stajnia-pod-debami.png, jest małe, na spotkanie podmień na ostre.
 
 ## Co łatwo zmienić
 Etykiety kategorii: CATS w script.js.
-Kolory pinów per motyw: PALETTES w script.js.
-Kolory i fonty motywów: sekcja data-theme na dole styles.css.
+Kolory pinów: COLORS w script.js.
+Kolory marki: zielen 22C55E, akcent 18B85C, grafit 0F1A14, tlo F4F8F5.
