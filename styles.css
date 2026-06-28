@@ -225,7 +225,7 @@ img { display: block; max-width: 100%; }
 .detail-actions .row .btn { flex: 1; }
 
 .map-wrap { flex: 1; position: relative; }
-#map { position: absolute; inset: 0; background: #dfe6df; }
+#map { position: absolute; inset: 0; background: #ECEAE4; }
 
 .pin-wrap { background: transparent; border: none; }
 .pin-wrap svg { display: block; transform-origin: 50% 100%; transition: transform 0.15s ease; filter: drop-shadow(0 3px 4px rgba(26, 26, 26, 0.35)); }
