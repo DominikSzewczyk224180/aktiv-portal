@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aktiv, jeździecka mapa Polski</title>
   <meta name="description" content="Aktiv. Cała jeździecka Polska na jednej mapie. Stajnie, jazda konna, weterynarze, fizjoterapeuci, dietetycy i sklepy jeździeckie.">
-  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="icon" type="image/png" href="images/favicon.png?v=4">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="index.html" aria-label="Aktiv, strona główna">
-      <img class="brand-mark" src="images/logo-mark.png" alt="Aktiv portal">
+      <img class="brand-mark" src="images/logo-mark.png?v=4" alt="Aktiv portal">
       <span class="brand-name"><b>Aktiv</b><span>portal</span></span>
     </a>
     <div class="topbar-actions">
@@ -77,13 +77,17 @@
       <div class="modal-success" id="add-success">
         <div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13 L10 18 L19 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
         <h3>Zgłoszenie wysłane</h3>
-        <p>Dziękujemy. Miejsce trafiło do moderacji. Po akceptacji w panelu admina pojawi się na mapie dla wszystkich. W demie widzisz je jako oczekujący pin.</p>
-        <button class="btn btn-solid" id="add-show-map" type="button">Zobacz na mapie</button>
+        <p>Dziękujemy. Miejsce trafiło do moderacji. Moderator zaakceptuje je w panelu admina i wtedy pojawi się na mapie dla wszystkich.</p>
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+          <a class="btn btn-solid" href="admin.html">Otwórz panel moderacji</a>
+          <button class="btn btn-ghost" id="add-done" type="button">Zamknij</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="script.js"></script>
+  <script src="store.js?v=4"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>

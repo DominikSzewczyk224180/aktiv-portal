@@ -15,8 +15,11 @@ const COLORS = {
   dietetyk: "#2E9E5B",
   sklep: "#E1922E"
 };
-const PENDING_COLOR = "#8A94A3";
-function colorFor(p) { return p.pending ? PENDING_COLOR : COLORS[p.cat]; }
+function catColor(cat) { return COLORS[cat] || "#8A94A3"; }
+
+function esc(s) {
+  return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
 
 const PLACES = [
   { id: 1,  cat: "stajnia",    name: "Stajnia Pod Dębami",             place: "Konstancin-Jeziorna", lat: 52.0894, lng: 21.1186, rating: 4.8, reviews: 126, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 712 04 18", address: "ul. Wierzbowa 4, Konstancin-Jeziorna", services: ["Pensjonat", "Lekcje jazdy", "Lonżowanie"], blurb: "Kameralna stajnia z krytą ujeżdżalnią i dostępem do leśnych tras.", image: "images/stajnia-pod-debami.png", profileUrl: "stajnia.html" },
@@ -39,7 +42,6 @@ const PLACES = [
 
 const MEDIA_MARK = '<svg class="mark" width="46" height="58" viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29 C12 29 21 18 21 10 A9 9 0 1 0 3 10 C3 18 12 29 12 29 Z" fill="none" stroke="#FFFFFF" stroke-width="2"></path><circle cx="12" cy="10" r="3" fill="none" stroke="#FFFFFF" stroke-width="2"></circle></svg>';
 const CHEVRON = '<svg class="chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6 L15 12 L9 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
-const CLOCK = '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M12 7 L12 12 L15.5 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
 
 function pinHtml(color) {
   return '<svg width="30" height="40" viewBox="0 0 28 38" aria-hidden="true"><path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="' + color + '" stroke="#FFFFFF" stroke-width="1.4"></path><circle cx="14" cy="14" r="4.6" fill="#FFFFFF"></circle></svg>';
@@ -55,10 +57,20 @@ function stars(rating) {
 function mediaHtml(p, big) {
   const hasPhoto = p.image && p.image.length > 0;
   const cls = "media" + (big ? " detail-media" : "") + (hasPhoto ? " has-photo" : "");
-  let style = "background-color:" + colorFor(p) + ";";
+  let style = "background-color:" + catColor(p.cat) + ";";
   if (hasPhoto) { style += "background-image:url('" + p.image + "');"; }
-  return '<div class="' + cls + '" style="' + style + '"><span class="cat-badge">' + CATS[p.cat].label + '</span>' + MEDIA_MARK + '</div>';
+  return '<div class="' + cls + '" style="' + style + '"><span class="cat-badge">' + esc(CATS[p.cat].label) + '</span>' + MEDIA_MARK + '</div>';
 }
+
+function communityPlaces() {
+  let subs = [];
+  try { subs = AktivStore.all(); } catch (e) { subs = []; }
+  return subs.filter(function (s) { return s.status === "approved"; }).map(function (s) {
+    return { id: s.id, cat: s.cat, name: s.name, place: s.place, address: s.address || s.place, phone: s.phone || "", services: [], blurb: s.blurb || "", rating: 0, reviews: 0, image: "", lat: s.lat, lng: s.lng, community: true };
+  });
+}
+function allPlaces() { return PLACES.concat(communityPlaces()); }
+function findPlace(id) { return allPlaces().filter(function (p) { return String(p.id) === String(id); })[0]; }
 
 const map = L.map("map", { scrollWheelZoom: true, zoomControl: false }).setView([52.18, 20.98], 10);
 L.control.zoom({ position: "topright" }).addTo(map);
@@ -72,7 +84,7 @@ const state = { cat: "all", q: "", place: "" };
 function applyFilters() {
   const q = state.q.trim().toLowerCase();
   const pl = state.place.trim().toLowerCase();
-  return PLACES.filter(function (p) {
+  return allPlaces().filter(function (p) {
     if (state.cat !== "all" && p.cat !== state.cat) { return false; }
     if (pl && p.place.toLowerCase().indexOf(pl) === -1) { return false; }
     if (q) {
@@ -99,8 +111,7 @@ function renderMarkers(list) {
   markersLayer.clearLayers();
   markerById = {};
   list.forEach(function (p) {
-    const cls = p.pending ? "pin-wrap pending" : "pin-wrap";
-    const icon = L.divIcon({ className: cls, html: pinHtml(colorFor(p)), iconSize: [30, 40], iconAnchor: [15, 40], popupAnchor: [0, -36] });
+    const icon = L.divIcon({ className: "pin-wrap", html: pinHtml(catColor(p.cat)), iconSize: [30, 40], iconAnchor: [15, 40], popupAnchor: [0, -36] });
     const m = L.marker([p.lat, p.lng], { icon: icon }).addTo(markersLayer);
     m.on("click", function () { openDetail(p, false); });
     markerById[p.id] = m;
@@ -108,7 +119,7 @@ function renderMarkers(list) {
 }
 
 function footHtml(p) {
-  if (p.pending) { return '<span class="pending-tag">Oczekuje</span>' + CHEVRON; }
+  if (p.community) { return '<span class="new-tag">Nowe</span>' + CHEVRON; }
   return '<div class="rating"><span class="stars">' + stars(p.rating) + '</span><b>' + p.rating.toFixed(1) + '</b><span>(' + p.reviews + ')</span></div>' + CHEVRON;
 }
 
@@ -121,28 +132,27 @@ function renderResults(list) {
     return;
   }
   wrap.innerHTML = list.map(function (p) {
-    return '<article class="card" data-id="' + p.id + '">' +
+    return '<article class="card" data-id="' + esc(p.id) + '">' +
       mediaHtml(p, false) +
       '<div class="card-body">' +
-        '<h3 class="card-title">' + p.name + '</h3>' +
-        '<p class="card-place">' + p.place + '</p>' +
+        '<h3 class="card-title">' + esc(p.name) + '</h3>' +
+        '<p class="card-place">' + esc(p.place) + '</p>' +
         '<div class="card-foot">' + footHtml(p) + '</div>' +
       '</div>' +
     '</article>';
   }).join("");
   Array.prototype.forEach.call(wrap.querySelectorAll(".card"), function (el) {
     el.addEventListener("click", function () {
-      const id = parseInt(el.getAttribute("data-id"), 10);
-      const p = PLACES.find(function (x) { return x.id === id; });
-      openDetail(p, true);
+      const p = findPlace(el.getAttribute("data-id"));
+      if (p) { openDetail(p, true); }
     });
   });
 }
 
 function actionsHtml(p) {
   const onmap = '<button class="btn btn-ghost" type="button" id="show-on-map">Pokaż na mapie</button>';
-  if (p.pending) { return onmap; }
-  const tel = '<a class="btn btn-green" href="tel:' + p.phone.replace(/\s/g, "") + '">Zadzwoń</a>';
+  if (p.community) { return onmap; }
+  const tel = '<a class="btn btn-green" href="tel:' + esc(p.phone.replace(/\s/g, "")) + '">Zadzwoń</a>';
   if (p.profileUrl) {
     return '<a class="btn btn-solid" href="' + p.profileUrl + '">Zobacz profil stajni</a>' +
            '<div class="row">' + tel + onmap + '</div>';
@@ -151,27 +161,25 @@ function actionsHtml(p) {
 }
 
 function detailTopHtml(p) {
-  if (p.pending) {
-    return '<div class="detail-pending">' + CLOCK + '<span>To miejsce czeka na akceptację moderatora. Po zatwierdzeniu będzie widoczne dla wszystkich.</span></div>';
-  }
+  if (p.community) { return '<div style="margin-bottom:16px"><span class="new-tag">Nowe miejsce</span></div>'; }
   return '<div class="rating detail-rating"><span class="stars">' + stars(p.rating) + '</span><b>' + p.rating.toFixed(1) + '</b><span>(' + p.reviews + ' opinii)</span></div>';
 }
 
 function metaHtml(p) {
-  let rows = '<div class="meta-row"><span class="meta-label">Adres</span><span class="meta-value">' + p.address + '</span></div>';
-  if (p.hours) { rows += '<div class="meta-row"><span class="meta-label">Godziny</span><span class="meta-value">' + p.hours + '</span></div>'; }
-  if (p.phone) { rows += '<div class="meta-row"><span class="meta-label">Telefon</span><span class="meta-value">' + p.phone + '</span></div>'; }
+  let rows = '<div class="meta-row"><span class="meta-label">Adres</span><span class="meta-value">' + esc(p.address) + '</span></div>';
+  if (p.hours) { rows += '<div class="meta-row"><span class="meta-label">Godziny</span><span class="meta-value">' + esc(p.hours) + '</span></div>'; }
+  if (p.phone) { rows += '<div class="meta-row"><span class="meta-label">Telefon</span><span class="meta-value">' + esc(p.phone) + '</span></div>'; }
   return '<div class="meta-grid">' + rows + '</div>';
 }
 
 function openDetail(p, fly) {
-  const servicesHtml = p.services.length ? '<div class="services">' + p.services.map(function (s) { return '<span class="tag">' + s + '</span>'; }).join("") + '</div>' : "";
-  const blurbHtml = p.blurb ? '<p class="blurb">' + p.blurb + '</p>' : "";
+  const servicesHtml = p.services.length ? '<div class="services">' + p.services.map(function (s) { return '<span class="tag">' + esc(s) + '</span>'; }).join("") + '</div>' : "";
+  const blurbHtml = p.blurb ? '<p class="blurb">' + esc(p.blurb) + '</p>' : "";
   const c = document.getElementById("detail-content");
   c.innerHTML =
     mediaHtml(p, true) +
     '<div class="detail-body">' +
-      '<h2 class="detail-title">' + p.name + '</h2>' +
+      '<h2 class="detail-title">' + esc(p.name) + '</h2>' +
       detailTopHtml(p) +
       metaHtml(p) +
       servicesHtml +
@@ -241,14 +249,10 @@ function closeAdd() {
   overlay.setAttribute("aria-hidden", "true");
 }
 function buildAddCategories() {
-  const sel = document.getElementById("a-cat");
-  sel.innerHTML = Object.keys(CATS).map(function (key) {
+  document.getElementById("a-cat").innerHTML = Object.keys(CATS).map(function (key) {
     return '<option value="' + key + '">' + CATS[key].label + '</option>';
   }).join("");
 }
-
-let pendingSeq = 1000;
-let lastAdded = null;
 
 function submitAdd() {
   const name = document.getElementById("a-name");
@@ -260,29 +264,23 @@ function submitAdd() {
   });
   if (!ok) { return; }
 
-  pendingSeq += 1;
   const center = map.getCenter();
-  const np = {
-    id: pendingSeq,
+  const sub = {
+    id: "u" + Date.now(),
     cat: document.getElementById("a-cat").value,
     name: name.value.trim(),
     place: place.value.trim(),
     address: document.getElementById("a-address").value.trim() || place.value.trim(),
     phone: document.getElementById("a-phone").value.trim(),
-    services: [],
     blurb: document.getElementById("a-desc").value.trim(),
-    rating: 0,
-    reviews: 0,
-    image: "",
     lat: center.lat,
     lng: center.lng,
-    pending: true
+    status: "pending",
+    ts: Date.now()
   };
-  PLACES.push(np);
-  lastAdded = np;
+  try { AktivStore.add(sub); } catch (e) {}
 
   ["a-name", "a-place", "a-address", "a-phone", "a-desc"].forEach(function (id) { document.getElementById(id).value = ""; });
-  refresh();
   document.getElementById("add-form").style.display = "none";
   document.getElementById("add-success").classList.add("show");
 }
@@ -293,14 +291,12 @@ document.getElementById("detail-back").addEventListener("click", closeDetail);
 document.getElementById("open-add").addEventListener("click", openAdd);
 document.getElementById("open-add-map").addEventListener("click", openAdd);
 document.getElementById("add-close").addEventListener("click", closeAdd);
+document.getElementById("add-done").addEventListener("click", closeAdd);
 overlay.addEventListener("click", function (e) { if (e.target === overlay) { closeAdd(); } });
 document.getElementById("a-submit").addEventListener("click", submitAdd);
-document.getElementById("add-show-map").addEventListener("click", function () {
-  closeAdd();
-  if (lastAdded) { openDetail(lastAdded, true); }
-});
 window.addEventListener("resize", function () { map.invalidateSize(); });
 
+try { AktivStore.seedOnce(); } catch (e) {}
 buildAddCategories();
 renderChips();
 refresh();

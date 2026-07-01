@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel moderacji | Aktiv portal</title>
+  <link rel="icon" type="image/png" href="images/favicon.png?v=4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=4">
+</head>
+<body class="admin-page">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Aktiv, strona główna">
+      <img class="brand-mark" src="images/logo-mark.png?v=4" alt="Aktiv portal">
+      <span class="brand-name"><b>Aktiv</b><span>portal</span></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="admin-topbar-label">Panel moderacji</span>
+      <a class="btn btn-ghost" href="index.html">Otwórz mapę</a>
+      <button class="btn btn-green" id="logout" type="button" style="display:none">Wyloguj</button>
+    </div>
+  </header>
+
+  <div class="admin-wrap">
+    <div class="admin-login" id="admin-login">
+      <h1 class="admin-h1">Logowanie</h1>
+      <p class="admin-lead">Panel moderatora Aktiv portal. Zaloguj się, aby zarządzać zgłoszeniami miejsc.</p>
+      <div class="field"><label for="l-login">Login</label><input id="l-login" type="text" placeholder="Login" autocomplete="username"></div>
+      <div class="field"><label for="l-pass">Hasło</label><input id="l-pass" type="password" placeholder="Hasło" autocomplete="current-password"></div>
+      <button class="btn btn-solid btn-lg" id="l-submit" type="button" style="width:100%">Zaloguj</button>
+      <p class="admin-error" id="l-error">Błędny login lub hasło.</p>
+    </div>
+
+    <div id="admin-panel" style="display:none">
+      <div class="admin-stats">
+        <div class="admin-stat"><b id="c-pending">0</b><span>Oczekujące</span></div>
+        <div class="admin-stat"><b id="c-approved">0</b><span>Zaakceptowane</span></div>
+        <div class="admin-stat"><b id="c-rejected">0</b><span>Odrzucone</span></div>
+      </div>
+      <div class="admin-section"><h2>Oczekujące</h2><div id="list-pending"></div></div>
+      <div class="admin-section"><h2>Zaakceptowane</h2><div id="list-approved"></div></div>
+      <div class="admin-section"><h2>Odrzucone</h2><div id="list-rejected"></div></div>
+      <div class="admin-tools"><button class="btn btn-ghost btn-sm" id="clear-demo" type="button">Wyczyść dane demo</button></div>
+    </div>
+  </div>
+
+  <script src="store.js?v=4"></script>
+  <script src="admin.js?v=4"></script>
+</body>
+</html>
