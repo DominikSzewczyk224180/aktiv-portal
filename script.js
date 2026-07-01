@@ -254,7 +254,7 @@ function buildAddCategories() {
   }).join("");
 }
 
-function submitAdd() {
+async function submitAdd() {
   const name = document.getElementById("a-name");
   const place = document.getElementById("a-place");
   let ok = true;
@@ -264,22 +264,35 @@ function submitAdd() {
   });
   if (!ok) { return; }
 
+  const addressVal = document.getElementById("a-address").value.trim();
+  const placeVal = place.value.trim();
+  const btn = document.getElementById("a-submit");
+  const label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Szukam lokalizacji...";
+
+  let coords = null;
+  try { coords = await AktivGeo.geocodePlace(addressVal, placeVal); } catch (e) { coords = null; }
   const center = map.getCenter();
+
   const sub = {
     id: "u" + Date.now(),
     cat: document.getElementById("a-cat").value,
     name: name.value.trim(),
-    place: place.value.trim(),
-    address: document.getElementById("a-address").value.trim() || place.value.trim(),
+    place: placeVal,
+    address: addressVal || placeVal,
     phone: document.getElementById("a-phone").value.trim(),
     blurb: document.getElementById("a-desc").value.trim(),
-    lat: center.lat,
-    lng: center.lng,
+    lat: coords ? coords.lat : center.lat,
+    lng: coords ? coords.lng : center.lng,
+    located: !!coords,
     status: "pending",
     ts: Date.now()
   };
   try { AktivStore.add(sub); } catch (e) {}
 
+  btn.disabled = false;
+  btn.textContent = label;
   ["a-name", "a-place", "a-address", "a-phone", "a-desc"].forEach(function (id) { document.getElementById(id).value = ""; });
   document.getElementById("add-form").style.display = "none";
   document.getElementById("add-success").classList.add("show");

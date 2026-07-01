@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel moderacji | Aktiv portal</title>
-  <link rel="icon" type="image/png" href="images/favicon.png?v=4">
+  <link rel="icon" type="image/png" href="images/favicon.png?v=5">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body class="admin-page">
   <header class="topbar">
     <a class="brand" href="index.html" aria-label="Aktiv, strona główna">
-      <img class="brand-mark" src="images/logo-mark.png?v=4" alt="Aktiv portal">
+      <img class="brand-mark" src="images/logo-mark.png?v=5" alt="Aktiv portal">
       <span class="brand-name"><b>Aktiv</b><span>portal</span></span>
     </a>
     <div class="topbar-actions">
@@ -46,7 +46,23 @@
     </div>
   </div>
 
-  <script src="store.js?v=4"></script>
-  <script src="admin.js?v=4"></script>
+  <div class="modal-overlay" id="edit-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-label="Edytuj miejsce" aria-modal="true">
+      <button class="modal-close" id="edit-close" type="button" aria-label="Zamknij">&times;</button>
+      <h2 class="modal-title">Edytuj miejsce</h2>
+      <p class="modal-sub">Popraw dane zgłoszone przez użytkownika. Zmiana adresu odświeży lokalizację na mapie.</p>
+      <div class="field"><label for="e-name">Nazwa miejsca</label><input id="e-name" type="text"></div>
+      <div class="field"><label for="e-cat">Kategoria</label><select id="e-cat"></select></div>
+      <div class="field"><label for="e-place">Miejscowość</label><input id="e-place" type="text"></div>
+      <div class="field"><label for="e-address">Adres</label><input id="e-address" type="text"></div>
+      <div class="field"><label for="e-phone">Telefon</label><input id="e-phone" type="tel"></div>
+      <div class="field"><label for="e-desc">Opis</label><textarea id="e-desc"></textarea></div>
+      <button id="e-save" class="btn btn-solid btn-lg" type="button" style="width:100%">Zapisz zmiany</button>
+      <p class="admin-error" id="e-error">Uzupełnij nazwę i miejscowość.</p>
+    </div>
+  </div>
+
+  <script src="store.js?v=5"></script>
+  <script src="admin.js?v=5"></script>
 </body>
 </html>
