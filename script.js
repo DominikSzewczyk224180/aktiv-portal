@@ -1,44 +1,45 @@
 const CATS = {
   stajnia:    { label: "Stajnie" },
-  pensjonat:  { label: "Pensjonaty" },
+  jazda:      { label: "Jazda konna" },
   weterynarz: { label: "Weterynarze" },
   fizjo:      { label: "Fizjoterapeuci" },
   dietetyk:   { label: "Dietetycy" },
-  sklep:      { label: "Sklepy z paszą" }
+  sklep:      { label: "Sklepy jeździeckie" }
 };
 
 const COLORS = {
-  stajnia: "#22C55E",
-  pensjonat: "#0EA5A4",
-  weterynarz: "#2F6FED",
-  fizjo: "#7C5CF0",
-  dietetyk: "#6FA80E",
-  sklep: "#EF8A00"
+  stajnia: "#034AA4",
+  jazda: "#0E8F9C",
+  weterynarz: "#D6564B",
+  fizjo: "#6B5BD0",
+  dietetyk: "#2E9E5B",
+  sklep: "#E1922E"
 };
-function catColor(cat) { return COLORS[cat]; }
+const PENDING_COLOR = "#8A94A3";
+function colorFor(p) { return p.pending ? PENDING_COLOR : COLORS[p.cat]; }
 
 const PLACES = [
-  { id: 1,  cat: "stajnia",    name: "Stajnia Pod Dębami",            place: "Konstancin-Jeziorna", lat: 52.0894, lng: 21.1186, rating: 4.8, reviews: 126, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 712 04 18", address: "ul. Wierzbowa 4, Konstancin-Jeziorna", services: ["Pensjonat", "Lekcje jazdy", "Lonżowanie"], blurb: "Kameralna stajnia z krytą ujeżdżalnią i dostępem do leśnych tras.", image: "images/stajnia-pod-debami.png", profileUrl: "stajnia.html" },
-  { id: 2,  cat: "stajnia",    name: "Ośrodek Jeździecki Lewada",     place: "Nadarzyn",            lat: 52.0840, lng: 20.8030, rating: 4.6, reviews: 89,  hours: "Pn-Nd, 7:00-21:00", phone: "+48 22 739 11 50", address: "ul. Polna 22, Nadarzyn", services: ["Skoki", "Ujeżdżenie", "Hipoterapia"], blurb: "Sportowy ośrodek z parkurem i lonżownikiem, lekcje na każdym poziomie.", image: "" },
-  { id: 3,  cat: "stajnia",    name: "Stajnia Biała Grzywa",          place: "Piaseczno",           lat: 52.0700, lng: 21.0240, rating: 4.9, reviews: 203, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 756 33 02", address: "ul. Sportowa 9, Piaseczno", services: ["Lekcje", "Obozy", "Pensjonat"], blurb: "Rodzinna stajnia z obozami jeździeckimi i nauką od podstaw.", image: "" },
-  { id: 4,  cat: "stajnia",    name: "Ranczo Mazovia",                place: "Grodzisk Mazowiecki", lat: 52.1100, lng: 20.6300, rating: 4.5, reviews: 54,  hours: "Wt-Nd, 9:00-19:00", phone: "+48 22 724 88 41", address: "ul. Leśna 3, Grodzisk Mazowiecki", services: ["Rajdy konne", "Jazdy w terenie"], blurb: "Rajdy konne i jazdy w terenie po malowniczych okolicach.", image: "" },
-  { id: 5,  cat: "pensjonat",  name: "Pensjonat dla Koni Zacisze",    place: "Izabelin",            lat: 52.3000, lng: 20.7900, rating: 4.7, reviews: 61,  hours: "Całodobowo", phone: "+48 22 722 50 19", address: "ul. Kampinoska 14, Izabelin", services: ["Boksy", "Padoki", "Pasza premium"], blurb: "Przestronne boksy, duże padoki i całodobowa opieka nad końmi.", image: "" },
-  { id: 6,  cat: "pensjonat",  name: "Koński Hotel Stara Stajnia",    place: "Józefów",             lat: 52.1380, lng: 21.2330, rating: 4.4, reviews: 37,  hours: "Całodobowo", phone: "+48 22 789 62 07", address: "ul. Nadwiślańska 8, Józefów", services: ["Boksy", "Wybiegi", "Monitoring"], blurb: "Bezpieczny pensjonat z monitoringiem i indywidualnym żywieniem.", image: "" },
-  { id: 7,  cat: "pensjonat",  name: "Pensjonat Equi Spokój",         place: "Brwinów",             lat: 52.1450, lng: 20.7150, rating: 4.8, reviews: 45,  hours: "Całodobowo", phone: "+48 22 729 14 33", address: "ul. Grodziska 27, Brwinów", services: ["Boksy", "Hala", "Rehabilitacja"], blurb: "Spokojne miejsce z halą i zapleczem rehabilitacyjnym.", image: "" },
-  { id: 8,  cat: "weterynarz", name: "Gabinet Weterynaryjny HorseVet", place: "Pruszków",           lat: 52.1700, lng: 20.8100, rating: 4.9, reviews: 178, hours: "Pn-Nd, dyżur 24h", phone: "+48 22 758 90 12", address: "ul. Kościuszki 41, Pruszków", services: ["Wyjazdy 24h", "USG", "Dentystyka"], blurb: "Wyjazdy w 24h, USG, gastroskopia i dentystyka koni.", image: "" },
-  { id: 9,  cat: "weterynarz", name: "Klinika Koni Vetilia",          place: "Łomianki",            lat: 52.3300, lng: 20.8800, rating: 4.7, reviews: 92,  hours: "Pn-Pt, 8:00-18:00", phone: "+48 22 751 27 60", address: "ul. Brukowa 6, Łomianki", services: ["Chirurgia", "Diagnostyka", "Szczepienia"], blurb: "Pełna diagnostyka, chirurgia i opieka szpitalna dla koni.", image: "" },
-  { id: 10, cat: "weterynarz", name: "Weterynarz Koński dr Kowalczyk", place: "Raszyn",             lat: 52.1500, lng: 20.9300, rating: 4.6, reviews: 40,  hours: "Pn-Sb, dyżur wyjazdowy", phone: "+48 22 715 48 90", address: "ul. Mszczonowska 12, Raszyn", services: ["Wyjazdy", "Profilaktyka", "Szczepienia"], blurb: "Wizyty wyjazdowe, profilaktyka i szczepienia w Twojej stajni.", image: "" },
-  { id: 11, cat: "fizjo",      name: "EquiFizjo Mazovia",             place: "Konstancin-Jeziorna", lat: 52.0950, lng: 21.1100, rating: 4.9, reviews: 66,  hours: "Pn-Sb, na umówienie", phone: "+48 22 717 05 88", address: "ul. Zdrojowa 2, Konstancin-Jeziorna", services: ["Masaż", "Taping", "Rehabilitacja"], blurb: "Fizjoterapia, masaż i taping dla koni sportowych i rekreacyjnych.", image: "" },
-  { id: 12, cat: "fizjo",      name: "Fizjoterapia Koni MoveHorse",   place: "Milanówek",           lat: 52.1200, lng: 20.6700, rating: 4.8, reviews: 51,  hours: "Pn-Pt, na umówienie", phone: "+48 22 724 31 09", address: "ul. Krakowska 18, Milanówek", services: ["Terapia manualna", "Laseroterapia"], blurb: "Terapia manualna i laseroterapia po kontuzjach.", image: "" },
-  { id: 13, cat: "dietetyk",   name: "NutriHorse Dietetyka Końska",   place: "Warszawa Wilanów",    lat: 52.1650, lng: 21.0900, rating: 4.7, reviews: 33,  hours: "Pn-Pt, 9:00-17:00", phone: "+48 22 885 14 20", address: "ul. Klimczaka 5, Warszawa", services: ["Plany żywieniowe", "Analiza pasz"], blurb: "Indywidualne plany żywieniowe i analiza pasz.", image: "" },
-  { id: 14, cat: "dietetyk",   name: "EquiDieta Anna Nowak",          place: "Zalesie Górne",       lat: 52.0300, lng: 21.0200, rating: 4.6, reviews: 28,  hours: "Pn-Pt, na umówienie", phone: "+48 22 756 71 44", address: "ul. Słoneczna 11, Zalesie Górne", services: ["Konsultacje", "Suplementacja"], blurb: "Konsultacje żywieniowe i dobór suplementacji.", image: "" },
-  { id: 15, cat: "sklep",      name: "Pasze i Akcesoria EquiShop",    place: "Piaseczno",           lat: 52.0760, lng: 21.0300, rating: 4.8, reviews: 140, hours: "Pn-Sb, 9:00-19:00", phone: "+48 22 750 60 31", address: "ul. Geodetów 76, Piaseczno", services: ["Pasze", "Siano", "Akcesoria"], blurb: "Pasze, siano i akcesoria z dostawą do stajni.", image: "" },
-  { id: 16, cat: "sklep",      name: "Sklep Jeździecki Galop",        place: "Pruszków",            lat: 52.1660, lng: 20.8000, rating: 4.5, reviews: 77,  hours: "Pn-Sb, 10:00-18:00", phone: "+48 22 758 22 14", address: "ul. Plantowa 5, Pruszków", services: ["Sprzęt", "Odzież", "Pasze"], blurb: "Sprzęt, odzież i pasze w jednym miejscu.", image: "" }
+  { id: 1,  cat: "stajnia",    name: "Stajnia Pod Dębami",             place: "Konstancin-Jeziorna", lat: 52.0894, lng: 21.1186, rating: 4.8, reviews: 126, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 712 04 18", address: "ul. Wierzbowa 4, Konstancin-Jeziorna", services: ["Pensjonat", "Lekcje jazdy", "Lonżowanie"], blurb: "Kameralna stajnia z krytą ujeżdżalnią i dostępem do leśnych tras.", image: "images/stajnia-pod-debami.png", profileUrl: "stajnia.html" },
+  { id: 2,  cat: "stajnia",    name: "Ośrodek Jeździecki Lewada",      place: "Nadarzyn",            lat: 52.0840, lng: 20.8030, rating: 4.6, reviews: 89,  hours: "Pn-Nd, 7:00-21:00", phone: "+48 22 739 11 50", address: "ul. Polna 22, Nadarzyn", services: ["Pensjonat", "Padoki", "Kryta hala"], blurb: "Ośrodek z krytą halą, padokami i pełnym zapleczem dla koni.", image: "" },
+  { id: 3,  cat: "stajnia",    name: "Stajnia Biała Grzywa",           place: "Piaseczno",           lat: 52.0700, lng: 21.0240, rating: 4.9, reviews: 203, hours: "Pn-Nd, 8:00-20:00", phone: "+48 22 756 33 02", address: "ul. Sportowa 9, Piaseczno", services: ["Pensjonat", "Boksy", "Padoki"], blurb: "Rodzinna stajnia z przestronnymi boksami i dużymi padokami.", image: "" },
+  { id: 4,  cat: "stajnia",    name: "Ranczo Mazovia",                 place: "Grodzisk Mazowiecki", lat: 52.1100, lng: 20.6300, rating: 4.5, reviews: 54,  hours: "Wt-Nd, 9:00-19:00", phone: "+48 22 724 88 41", address: "ul. Leśna 3, Grodzisk Mazowiecki", services: ["Pensjonat", "Wybiegi", "Siano"], blurb: "Spokojne ranczo z dużymi wybiegami wśród łąk i lasów.", image: "" },
+  { id: 5,  cat: "jazda",      name: "Szkoła Jazdy Konnej Kłus",       place: "Izabelin",            lat: 52.3000, lng: 20.7900, rating: 4.7, reviews: 61,  hours: "Pn-Nd, 9:00-20:00", phone: "+48 22 722 50 19", address: "ul. Kampinoska 14, Izabelin", services: ["Lekcje indywidualne", "Lekcje grupowe", "Lonżowanie"], blurb: "Szkoła jazdy dla dzieci i dorosłych, od podstaw po sport.", image: "" },
+  { id: 6,  cat: "jazda",      name: "Klub Jeździecki Kopyto",         place: "Józefów",             lat: 52.1380, lng: 21.2330, rating: 4.4, reviews: 37,  hours: "Wt-Nd, 9:00-19:00", phone: "+48 22 789 62 07", address: "ul. Nadwiślańska 8, Józefów", services: ["Jazda w terenie", "Obozy", "Hipoterapia"], blurb: "Klub z jazdą w terenie i wakacyjnymi obozami jeździeckimi.", image: "" },
+  { id: 7,  cat: "jazda",      name: "Ośrodek Jazdy Konnej Kaskada",   place: "Brwinów",             lat: 52.1450, lng: 20.7150, rating: 4.8, reviews: 45,  hours: "Pn-Sb, 8:00-20:00", phone: "+48 22 729 14 33", address: "ul. Grodziska 27, Brwinów", services: ["Lekcje", "Ujeżdżenie", "Skoki"], blurb: "Nauka jazdy oraz treningi ujeżdżenia i skoków przez przeszkody.", image: "" },
+  { id: 8,  cat: "weterynarz", name: "Gabinet Weterynaryjny HorseVet", place: "Pruszków",            lat: 52.1700, lng: 20.8100, rating: 4.9, reviews: 178, hours: "Pn-Nd, dyżur 24h", phone: "+48 22 758 90 12", address: "ul. Kościuszki 41, Pruszków", services: ["Wyjazdy 24h", "USG", "Dentystyka"], blurb: "Wyjazdy w 24h, USG, gastroskopia i dentystyka koni.", image: "" },
+  { id: 9,  cat: "weterynarz", name: "Klinika Koni Vetilia",           place: "Łomianki",            lat: 52.3300, lng: 20.8800, rating: 4.7, reviews: 92,  hours: "Pn-Pt, 8:00-18:00", phone: "+48 22 751 27 60", address: "ul. Brukowa 6, Łomianki", services: ["Chirurgia", "Diagnostyka", "Szczepienia"], blurb: "Pełna diagnostyka, chirurgia i opieka szpitalna dla koni.", image: "" },
+  { id: 10, cat: "weterynarz", name: "Weterynarz Koński dr Kowalczyk",  place: "Raszyn",             lat: 52.1500, lng: 20.9300, rating: 4.6, reviews: 40,  hours: "Pn-Sb, dyżur wyjazdowy", phone: "+48 22 715 48 90", address: "ul. Mszczonowska 12, Raszyn", services: ["Wyjazdy", "Profilaktyka", "Szczepienia"], blurb: "Wizyty wyjazdowe, profilaktyka i szczepienia w Twojej stajni.", image: "" },
+  { id: 11, cat: "fizjo",      name: "EquiFizjo Mazovia",              place: "Konstancin-Jeziorna", lat: 52.0950, lng: 21.1100, rating: 4.9, reviews: 66,  hours: "Pn-Sb, na umówienie", phone: "+48 22 717 05 88", address: "ul. Zdrojowa 2, Konstancin-Jeziorna", services: ["Masaż", "Taping", "Rehabilitacja"], blurb: "Fizjoterapia, masaż i taping dla koni sportowych i rekreacyjnych.", image: "" },
+  { id: 12, cat: "fizjo",      name: "Fizjoterapia Koni MoveHorse",    place: "Milanówek",           lat: 52.1200, lng: 20.6700, rating: 4.8, reviews: 51,  hours: "Pn-Pt, na umówienie", phone: "+48 22 724 31 09", address: "ul. Krakowska 18, Milanówek", services: ["Terapia manualna", "Laseroterapia"], blurb: "Terapia manualna i laseroterapia po kontuzjach.", image: "" },
+  { id: 13, cat: "dietetyk",   name: "NutriHorse Dietetyka Końska",    place: "Warszawa Wilanów",    lat: 52.1650, lng: 21.0900, rating: 4.7, reviews: 33,  hours: "Pn-Pt, 9:00-17:00", phone: "+48 22 885 14 20", address: "ul. Klimczaka 5, Warszawa", services: ["Plany żywieniowe", "Analiza pasz"], blurb: "Indywidualne plany żywieniowe i analiza pasz.", image: "" },
+  { id: 14, cat: "dietetyk",   name: "EquiDieta Anna Nowak",           place: "Zalesie Górne",       lat: 52.0300, lng: 21.0200, rating: 4.6, reviews: 28,  hours: "Pn-Pt, na umówienie", phone: "+48 22 756 71 44", address: "ul. Słoneczna 11, Zalesie Górne", services: ["Konsultacje", "Suplementacja"], blurb: "Konsultacje żywieniowe i dobór suplementacji.", image: "" },
+  { id: 15, cat: "sklep",      name: "Sklep Jeździecki EquiShop",      place: "Piaseczno",           lat: 52.0760, lng: 21.0300, rating: 4.8, reviews: 140, hours: "Pn-Sb, 9:00-19:00", phone: "+48 22 750 60 31", address: "ul. Geodetów 76, Piaseczno", services: ["Sprzęt", "Odzież", "Pasze"], blurb: "Sprzęt jeździecki, odzież i pasze w jednym miejscu.", image: "" },
+  { id: 16, cat: "sklep",      name: "Sklep Jeździecki Galop",         place: "Pruszków",            lat: 52.1660, lng: 20.8000, rating: 4.5, reviews: 77,  hours: "Pn-Sb, 10:00-18:00", phone: "+48 22 758 22 14", address: "ul. Plantowa 5, Pruszków", services: ["Siodła", "Ogłowia", "Akcesoria"], blurb: "Siodła, ogłowia i akcesoria dla jeźdźca i konia.", image: "" }
 ];
 
 const MEDIA_MARK = '<svg class="mark" width="46" height="58" viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29 C12 29 21 18 21 10 A9 9 0 1 0 3 10 C3 18 12 29 12 29 Z" fill="none" stroke="#FFFFFF" stroke-width="2"></path><circle cx="12" cy="10" r="3" fill="none" stroke="#FFFFFF" stroke-width="2"></circle></svg>';
-
 const CHEVRON = '<svg class="chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6 L15 12 L9 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+const CLOCK = '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M12 7 L12 12 L15.5 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
 
 function pinHtml(color) {
   return '<svg width="30" height="40" viewBox="0 0 28 38" aria-hidden="true"><path d="M14 0 C6 0 0 6 0 14 C0 24 14 38 14 38 C14 38 28 24 28 14 C28 6 22 0 14 0 Z" fill="' + color + '" stroke="#FFFFFF" stroke-width="1.4"></path><circle cx="14" cy="14" r="4.6" fill="#FFFFFF"></circle></svg>';
@@ -54,7 +55,7 @@ function stars(rating) {
 function mediaHtml(p, big) {
   const hasPhoto = p.image && p.image.length > 0;
   const cls = "media" + (big ? " detail-media" : "") + (hasPhoto ? " has-photo" : "");
-  let style = "background-color:" + catColor(p.cat) + ";";
+  let style = "background-color:" + colorFor(p) + ";";
   if (hasPhoto) { style += "background-image:url('" + p.image + "');"; }
   return '<div class="' + cls + '" style="' + style + '"><span class="cat-badge">' + CATS[p.cat].label + '</span>' + MEDIA_MARK + '</div>';
 }
@@ -98,11 +99,17 @@ function renderMarkers(list) {
   markersLayer.clearLayers();
   markerById = {};
   list.forEach(function (p) {
-    const icon = L.divIcon({ className: "pin-wrap", html: pinHtml(catColor(p.cat)), iconSize: [30, 40], iconAnchor: [15, 40], popupAnchor: [0, -36] });
+    const cls = p.pending ? "pin-wrap pending" : "pin-wrap";
+    const icon = L.divIcon({ className: cls, html: pinHtml(colorFor(p)), iconSize: [30, 40], iconAnchor: [15, 40], popupAnchor: [0, -36] });
     const m = L.marker([p.lat, p.lng], { icon: icon }).addTo(markersLayer);
     m.on("click", function () { openDetail(p, false); });
     markerById[p.id] = m;
   });
+}
+
+function footHtml(p) {
+  if (p.pending) { return '<span class="pending-tag">Oczekuje</span>' + CHEVRON; }
+  return '<div class="rating"><span class="stars">' + stars(p.rating) + '</span><b>' + p.rating.toFixed(1) + '</b><span>(' + p.reviews + ')</span></div>' + CHEVRON;
 }
 
 function renderResults(list) {
@@ -119,10 +126,7 @@ function renderResults(list) {
       '<div class="card-body">' +
         '<h3 class="card-title">' + p.name + '</h3>' +
         '<p class="card-place">' + p.place + '</p>' +
-        '<div class="card-foot">' +
-          '<div class="rating"><span class="stars">' + stars(p.rating) + '</span><b>' + p.rating.toFixed(1) + '</b><span>(' + p.reviews + ')</span></div>' +
-          CHEVRON +
-        '</div>' +
+        '<div class="card-foot">' + footHtml(p) + '</div>' +
       '</div>' +
     '</article>';
   }).join("");
@@ -136,8 +140,9 @@ function renderResults(list) {
 }
 
 function actionsHtml(p) {
-  const tel = '<a class="btn btn-green" href="tel:' + p.phone.replace(/\s/g, "") + '">Zadzwoń</a>';
   const onmap = '<button class="btn btn-ghost" type="button" id="show-on-map">Pokaż na mapie</button>';
+  if (p.pending) { return onmap; }
+  const tel = '<a class="btn btn-green" href="tel:' + p.phone.replace(/\s/g, "") + '">Zadzwoń</a>';
   if (p.profileUrl) {
     return '<a class="btn btn-solid" href="' + p.profileUrl + '">Zobacz profil stajni</a>' +
            '<div class="row">' + tel + onmap + '</div>';
@@ -145,20 +150,32 @@ function actionsHtml(p) {
   return '<div class="row">' + tel + onmap + '</div>';
 }
 
+function detailTopHtml(p) {
+  if (p.pending) {
+    return '<div class="detail-pending">' + CLOCK + '<span>To miejsce czeka na akceptację moderatora. Po zatwierdzeniu będzie widoczne dla wszystkich.</span></div>';
+  }
+  return '<div class="rating detail-rating"><span class="stars">' + stars(p.rating) + '</span><b>' + p.rating.toFixed(1) + '</b><span>(' + p.reviews + ' opinii)</span></div>';
+}
+
+function metaHtml(p) {
+  let rows = '<div class="meta-row"><span class="meta-label">Adres</span><span class="meta-value">' + p.address + '</span></div>';
+  if (p.hours) { rows += '<div class="meta-row"><span class="meta-label">Godziny</span><span class="meta-value">' + p.hours + '</span></div>'; }
+  if (p.phone) { rows += '<div class="meta-row"><span class="meta-label">Telefon</span><span class="meta-value">' + p.phone + '</span></div>'; }
+  return '<div class="meta-grid">' + rows + '</div>';
+}
+
 function openDetail(p, fly) {
+  const servicesHtml = p.services.length ? '<div class="services">' + p.services.map(function (s) { return '<span class="tag">' + s + '</span>'; }).join("") + '</div>' : "";
+  const blurbHtml = p.blurb ? '<p class="blurb">' + p.blurb + '</p>' : "";
   const c = document.getElementById("detail-content");
   c.innerHTML =
     mediaHtml(p, true) +
     '<div class="detail-body">' +
       '<h2 class="detail-title">' + p.name + '</h2>' +
-      '<div class="rating detail-rating"><span class="stars">' + stars(p.rating) + '</span><b>' + p.rating.toFixed(1) + '</b><span>(' + p.reviews + ' opinii)</span></div>' +
-      '<div class="meta-grid">' +
-        '<div class="meta-row"><span class="meta-label">Adres</span><span class="meta-value">' + p.address + '</span></div>' +
-        '<div class="meta-row"><span class="meta-label">Godziny</span><span class="meta-value">' + p.hours + '</span></div>' +
-        '<div class="meta-row"><span class="meta-label">Telefon</span><span class="meta-value">' + p.phone + '</span></div>' +
-      '</div>' +
-      '<div class="services">' + p.services.map(function (s) { return '<span class="tag">' + s + '</span>'; }).join("") + '</div>' +
-      '<p class="blurb">' + p.blurb + '</p>' +
+      detailTopHtml(p) +
+      metaHtml(p) +
+      servicesHtml +
+      blurbHtml +
       '<div class="detail-actions">' + actionsHtml(p) + '</div>' +
     '</div>';
 
@@ -186,7 +203,7 @@ function closeDetail() {
 
 function renderChips() {
   const wrap = document.getElementById("chips");
-  let html = '<button class="chip active" data-cat="all"><span class="dot" style="background:#0F1A14"></span>Wszystko</button>';
+  let html = '<button class="chip active" data-cat="all"><span class="dot" style="background:#1E2A40"></span>Wszystko</button>';
   Object.keys(CATS).forEach(function (key) {
     html += '<button class="chip" data-cat="' + key + '"><span class="dot" style="background:' + COLORS[key] + '"></span>' + CATS[key].label + '</button>';
   });
@@ -212,11 +229,79 @@ function fitToAll() {
   map.fitBounds(pts, { padding: [50, 50] });
 }
 
+const overlay = document.getElementById("add-overlay");
+function openAdd() {
+  document.getElementById("add-form").style.display = "block";
+  document.getElementById("add-success").classList.remove("show");
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden", "false");
+}
+function closeAdd() {
+  overlay.classList.remove("open");
+  overlay.setAttribute("aria-hidden", "true");
+}
+function buildAddCategories() {
+  const sel = document.getElementById("a-cat");
+  sel.innerHTML = Object.keys(CATS).map(function (key) {
+    return '<option value="' + key + '">' + CATS[key].label + '</option>';
+  }).join("");
+}
+
+let pendingSeq = 1000;
+let lastAdded = null;
+
+function submitAdd() {
+  const name = document.getElementById("a-name");
+  const place = document.getElementById("a-place");
+  let ok = true;
+  [name, place].forEach(function (input) {
+    if (!input.value.trim()) { input.style.borderColor = "#D6564B"; ok = false; }
+    else { input.style.borderColor = ""; }
+  });
+  if (!ok) { return; }
+
+  pendingSeq += 1;
+  const center = map.getCenter();
+  const np = {
+    id: pendingSeq,
+    cat: document.getElementById("a-cat").value,
+    name: name.value.trim(),
+    place: place.value.trim(),
+    address: document.getElementById("a-address").value.trim() || place.value.trim(),
+    phone: document.getElementById("a-phone").value.trim(),
+    services: [],
+    blurb: document.getElementById("a-desc").value.trim(),
+    rating: 0,
+    reviews: 0,
+    image: "",
+    lat: center.lat,
+    lng: center.lng,
+    pending: true
+  };
+  PLACES.push(np);
+  lastAdded = np;
+
+  ["a-name", "a-place", "a-address", "a-phone", "a-desc"].forEach(function (id) { document.getElementById(id).value = ""; });
+  refresh();
+  document.getElementById("add-form").style.display = "none";
+  document.getElementById("add-success").classList.add("show");
+}
+
 document.getElementById("q").addEventListener("input", function (e) { state.q = e.target.value; refresh(); });
 document.getElementById("place").addEventListener("input", function (e) { state.place = e.target.value; refresh(); });
 document.getElementById("detail-back").addEventListener("click", closeDetail);
+document.getElementById("open-add").addEventListener("click", openAdd);
+document.getElementById("open-add-map").addEventListener("click", openAdd);
+document.getElementById("add-close").addEventListener("click", closeAdd);
+overlay.addEventListener("click", function (e) { if (e.target === overlay) { closeAdd(); } });
+document.getElementById("a-submit").addEventListener("click", submitAdd);
+document.getElementById("add-show-map").addEventListener("click", function () {
+  closeAdd();
+  if (lastAdded) { openDetail(lastAdded, true); }
+});
 window.addEventListener("resize", function () { map.invalidateSize(); });
 
+buildAddCategories();
 renderChips();
 refresh();
 fitToAll();
