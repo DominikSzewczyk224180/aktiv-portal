@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Aktiv portal, jezdziecka mapa Polski{% endblock %}</title>
+  <meta name="description" content="Aktiv portal. Cala jezdziecka Polska na jednej mapie. Stajnie, jazda konna, weterynarze, fizjoterapeuci, dietetycy i sklepy jezdzieckie.">
+  <link rel="icon" type="image/png" href="{% static 'directory/img/favicon.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  {% block head %}{% endblock %}
+  <link rel="stylesheet" href="{% static 'directory/css/styles.css' %}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Aktiv portal, strona glowna">
+      <img class="brand-mark" src="{% static 'directory/img/logo-mark.png' %}" alt="Aktiv portal">
+      <span class="brand-name"><b>Aktiv</b><span>portal</span></span>
+    </a>
+    <nav class="topnav">
+      <a href="/">Mapa</a>
+      <a href="/strona/o-nas/">O nas</a>
+      <a href="/strona/kontakt/">Kontakt</a>
+    </nav>
+    <div class="topbar-actions">
+      <a class="btn btn-solid" href="/dodaj/">Dodaj miejsce</a>
+      <a class="btn btn-ghost" href="/admin/">Zaloguj</a>
+    </div>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  {% block footer %}
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="/strona/o-nas/">O nas</a>
+        <a href="/strona/kontakt/">Kontakt</a>
+        <a href="/strona/regulamin/">Regulamin</a>
+        <a href="/strona/polityka-prywatnosci/">Polityka prywatnosci</a>
+      </div>
+      <div class="footer-copy">Aktiv portal, wersja startowa</div>
+    </div>
+  </footer>
+  {% endblock %}
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
