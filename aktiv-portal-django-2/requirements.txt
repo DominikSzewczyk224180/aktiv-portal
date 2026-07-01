@@ -1,0 +1,5 @@
+Django>=5.0,<5.2
+Pillow>=10.0
+whitenoise>=6.0
+requests>=2.31
+# mysqlclient>=2.2   # odkomentuj, jesli na seohost uzywasz MySQL zamiast SQLite
